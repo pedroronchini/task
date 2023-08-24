@@ -5,21 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
     public function index()
     {
-        if (Auth::check()) {
-            $tasks = Task::all();
-            return response()->json($tasks);
-        }
-        
+
+        $tasks = Task::all();
+        return response()->json($tasks);
     }
 
     public function store(Request $request)
     {
+        
         $data = $request->validate([
             'title' => 'required|string',
             'description' => 'nullable|string',
