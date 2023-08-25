@@ -24,4 +24,5 @@ Route::get('/tasks/{id}', 'TaskController@show');
 Route::put('/tasks/{id}', 'TaskController@update');
 Route::delete('/tasks/{id}', 'TaskController@destroy');
 Route::post('/users', 'UserController@store');
+Route::get('/users', 'UserController@index');
 Route::post('/login', 'AuthenticationController@login');
