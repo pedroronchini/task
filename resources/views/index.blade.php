@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="{{ assets('css/app.css') }}">
+
   <title>Tasks</title>
 </head>
 <body>
@@ -21,5 +23,6 @@
   </div>
 
   <script src="{{ asset('js/bootstrap.js') }}"></script>
+  <script src="{{ asset('js/scripts.js') }}"></script>
 </body>
 </html>
