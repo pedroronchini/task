@@ -17,12 +17,12 @@ class TaskController extends Controller
 
     public function store(Request $request)
     {
-        
         $data = $request->validate([
             'title' => 'required|string',
             'description' => 'nullable|string',
             'attached_files' => 'nullable|array',
             'completed' => 'boolean',
+            'completed_at' => 'nullable|date',
             'user_id' => 'required|exists:users,id'
         ]);
 
