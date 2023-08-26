@@ -11,7 +11,7 @@ class Task extends Model
 
     public $timestamps = false;
 
-    protected $table = 'users';
+    protected $table = 'tasks';
     protected $fillable = [
         'id',
         'title',
