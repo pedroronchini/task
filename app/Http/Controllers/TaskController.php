@@ -28,7 +28,7 @@ class TaskController extends Controller
 
         $task = Task::create($data);
 
-        return response()->json($task, Response::HTTP_CREATED);
+        return response()->json($task);
     }
 
     public function show($id)
