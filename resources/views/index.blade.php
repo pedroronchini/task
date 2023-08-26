@@ -22,7 +22,7 @@
     </div>
   </div>
 
-  <script src="{{ asset('js/bootstrap.js') }}"></script>
-  <script src="{{ asset('js/scripts.js') }}"></script>
+  <script src="../js/bootstrap.js"></script>
+  <script src="../js/scripts.js"></script>
 </body>
 </html>
