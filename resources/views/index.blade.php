@@ -12,7 +12,7 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-12">
-        <h1>list of tasks</h1>
+        <h1 class="text-center">Tasks</h1>
       </div>
       <div class="col-sm-12">
         <div id="table-task"></div>
