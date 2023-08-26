@@ -10,7 +10,14 @@
 <body>
   
   <div class="container">
-    <h1>list of tasks</h1>
+    <div class="row">
+      <div class="col-sm-12">
+        <h1>list of tasks</h1>
+      </div>
+      <div class="col-sm-12">
+        <div id="table-task"></div>
+      </div>
+    </div>
   </div>
 
   <script src="{{ asset('js/bootstrap.js') }}"></script>
