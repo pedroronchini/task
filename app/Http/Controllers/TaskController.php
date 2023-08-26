@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -42,14 +43,24 @@ class TaskController extends Controller
         $task = Task::findOrFail($id);
 
         $data = $request->validate([
-            'title' => 'required|string',
+            'title' => 'nullable|string',
             'description' => 'nullable|string',
             'attached_files' => 'nullable|array',
             'completed' => 'boolean',
+            'completed_at' => 'nullable|date',
             'user_id' => 'required|exists:users,id'
         ]);
 
-        $task->update($data);
+        $array_update = [
+            'title' => $data['title'] ?? $task->title,
+            'description' => $data['description'] ?? $task->description,
+            'attached_files' => $data['attached_files'] ?? $task->attached_files,
+            'completed' => $data['completed'] ?? $task->completed,
+            'completed_at' => $data['completed_at'] ?? Carbon::now(),
+            'user_id' => $data['user_id'] ?? $task->user_id
+        ];
+
+        $task->update($array_update);
         return response()->json($task);
     }
 
