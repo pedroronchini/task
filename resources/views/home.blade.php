@@ -2,27 +2,27 @@
 
 @section('content')
 <div class="container">
-    <div id="alert-success" class="alert alert-success alert-dismissible fade show" role="alert">
+    <div id="alert-success" class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
         <strong>Successfully saved!</strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <button type="button" class="close btn-close" onclick="closeAlert('alert-success')" aria-label="Close">" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div id="alert-error" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <div id="alert-error" class="alert alert-warning alert-dismissible fade show" role="alert"  style="display: none;">
         <strong>Could not save, please try again!</strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <button type="button" class="close btn-close" onclick="closeAlert('alert-error')" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div id="alert-success-delete" class="alert alert-success alert-dismissible fade show" role="alert">
+    <div id="alert-success-delete" class="alert alert-success alert-dismissible fade show" role="alert"  style="display: none;">
         <strong>Successfully task deleted!</strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <button type="button" class="close btn-close" onclick="closeAlert('alert-success-delete')"  data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div id="alert-error-delete" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <div id="alert-error-delete" class="alert alert-warning alert-dismissible fade show" role="alert"  style="display: none;">
         <strong>Could not delete, please try again!</strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <button type="button" class="close btn-close" onclick="closeAlert('alert-error-delete')"  data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -51,7 +51,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="createTaskModalLabel">Edit Task</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" onclick="closeModal('createTaskModalLabel')" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -94,7 +94,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="editTaskModalLabel">Edit Task</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" onclick="closeModal('editTaskModal')" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -133,12 +133,12 @@
   </div>
 </div>
 
-<div class="modal" tabindex="-1" role="dialog">
+<div id="deleteTaskModal" class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Delete Task</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" onclick="closeModal('deleteTaskModal')" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -365,6 +365,18 @@
                 }
             });
         });
+    };
+
+    function closeModal(idModal) {
+        const modal = document.getElementById(idModal);
+
+        modal.style.display = 'none';
+    };
+
+    function closeAlert(idAlert) {
+        const alert = document.getElementById(idAlert);
+
+        alert.style.display = 'none';
     };
 
 </script>
