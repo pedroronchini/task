@@ -4,7 +4,7 @@
 <div class="container">
     <div id="alert-success" class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
         <strong>Successfully saved!</strong>
-        <button type="button" class="close btn-close" onclick="closeAlert('alert-success')" aria-label="Close">" data-dismiss="alert" aria-label="Close">
+        <button type="button" class="close btn-close" onclick="closeAlert('alert-success')" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -31,7 +31,7 @@
             <div class="card">
                 <div class="card-header">Dashboard
                     <div class="float-right">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createTaskModal">
+                        <button type="button" class="btn btn-primary" onclick="$('#createTaskModal').modal('show')" data-toggle="modal" data-target="#createTaskModal">
                             Create Task
                             <i class="fa fa-plus"></i>
                         </button>
@@ -51,7 +51,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="createTaskModalLabel">Edit Task</h5>
-        <button type="button" class="close" onclick="closeModal('createTaskModalLabel')" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" onclick="closeModal('createTaskModal')" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -83,7 +83,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" onclick="closeModal('createTaskModal')" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" onclick="createTask()">Create</button>
       </div>
     </div>
@@ -126,7 +126,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" onclick="closeModal('editTaskModal')" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="save-task">Save</button>
       </div>
     </div>
@@ -147,7 +147,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id="delete-task">Yes</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-secondary" onclick="closeModal('deleteTaskModal')" data-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>
@@ -155,13 +155,16 @@
 
 <script>
 
-    document.addEventListener('DOMContentLoaded', () => {
-        fetch('/api/tasks', {
+    $(document).ready(() => {
+        listTasks();
+    });
+
+    function listTasks() {
+      fetch('/api/tasks', {
             method: 'GET',
         })
         .then(response => response.json())
         .then(data => {
-            let div_table = document.getElementById('list-tasks');
             let html_table = '';
 
             html_table += `<table class="table table-striped">`;
@@ -214,64 +217,69 @@
             html_table += `</tbody>`;
             html_table += `</table>`;
 
-            div_table.innerHTML = html_table;
+            $('#list-tasks').html(html_table);
         })
         .catch(error => {
             console.log(error);
         });
+    }
 
-
-    });
-
-    function createTask() {
-        const modal = document.getElementById('createTaskModal');
-        const alert_success = document.getElementById('alert-success');
-        const alert_error = document.getElementById('alert-error');
-        
-        const title = document.getElementById('create-title-task').value;
-        const description = document.getElementById('create-description-task').value;
-        const status = document.getElementById('create-status-task').value;
-        const files = document.getElementById('create-files-task');
-        const date_completed = document.getElementById('create-date-completed-task').value;
-        const id_user = document.getElementById('id_user').value;
-        
+    function createTask() {        
+        const title = $('#create-title-task').val();
+        const description = $('#create-description-task').val();
+        const status = $('#create-status-task').val();
+        const completed = status == '1' ? true : false;
+        const files = $('#create-files-task');
+        const date_completed = $('#create-date-completed-task').val();
+        const id_user = $('#id_user').val();
         const files_array = [];
-        files.files.forEach(file => {
-            files_array.push(file.name);
-        });
-
-        fetch('/api/tasks', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                title,
-                description,
-                status,
-                files_array,
-                date_completed,
-                id_user
-            })
-        })
-        .then(response => {
-            if (response.ok) {
-                modal.style.display = 'none';
-                alert_success.style.display = 'block';
-            } else {
-                modal.style.display = 'none';
-                alert_error.style.display = 'block';
-            }
-        })
         
+        if (files[0].length > 0) {
+          files[0].files[0].forEach(file => {
+              files_array.push(file.name);
+          });
+        }
+
+        if (title != '' ) {
+          fetch('/api/tasks', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+              },
+              body: JSON.stringify({
+                  'title': title,
+                  'description': description,
+                  'completed': completed,
+                  'attached_files': files_array,
+                  'completed_at': date_completed,
+                  'user_id': id_user
+              })
+          })
+          .then(response => {
+              if (response.ok) {
+                $('#createTaskModal').modal('hide');
+                $('#alert-success').show();
+                listTasks();
+              } else {
+                response.json().then(data => {
+                  console.log('Erro:', data);
+                  $('#alert-error').show();
+                }).catch(error => {
+                    console.error('Erro ao processar resposta:', error);
+                    $('#alert-error').show();
+                });
+                $('#createTaskModal').modal('hide');
+              }
+          });
+        } else {
+          $('#createTaskModal').modal('hide');
+          $('#alert-error').show();
+        } 
     };
 
     function editTask(id) {
-        const modal = document.getElementById('editTaskModal');
-        const alert = document.getElementById('alert-error');
-
-        modal.style.display = 'block';
+      $('#editTaskModal').modal('show');
 
         fetch(`/api/tasks/${id}`, {
             method: 'GET',
@@ -282,7 +290,7 @@
             const {
                 title,
                 description,
-                status,
+                completed,
                 attached_files,
                 completed_at
             } = data;
@@ -293,32 +301,21 @@
                 return html_files;
             });
 
-            const input_title = document.getElementById('title-task');
-            const input_description = document.getElementById('description-task');
-            const select_status = document.getElementById('status-task');
-            const list_files = document.getElementById('list-files');
-            const input_date_completed = document.getElementById('date-completed-task');
-            const save_task = document.getElementById('save-task');
+            const status = completed ? '1' : '0';
 
-            input_title.value = title;
-            input_description.value = description;
-            select_status.value = status;
-            list_files.innerHTML = html_files;
-            input_date_completed.value = completed_at;
-            save_task.addEventListener('click', () => {
-                updateTask(id);
-                modal.style.display = 'none';
-            });
+            $('#title-task').val(title);
+            $('#description-task').val(description);
+            $('#status-task').val(status);
+            $('#list-files').val(files);
+            $('#date-completed-task').val(completed_at);
+            $('#save-task').attr('onclick', `updateTask(${id})`);
         }).catch(error => {
-            modal.style.display = 'none';
-            alert.style.display = 'block';
+          $('#editTaskModal').modal('hide');
+          $('#alert-error').show();
         });
     };
     
     function updateTask(id) {
-        const alert_success = document.getElementById('alert-success');
-        const alert_error = document.getElementById('alert-error');
-
         fetch(`/api/tasks/${id}`, {
             method: 'PUT',
             headers: {
@@ -327,54 +324,65 @@
 
             },
             body: JSON.stringify({
-                title: document.getElementById('title-task').value,
-                description: document.getElementById('description-task').value,
-                status: document.getElementById('status-task').value,
-                completed_at: document.getElementById('date-completed-task').value,
+                title: $('#title-task').val(),
+                description: $('#description-task').val(),
+                completed: $('#status-task').val(),
+                completed_at: $('#date-completed-task').val(),
                 attached_files: [],
-                completed_at: document.getElementById('date-completed-task').value,
-                id_user: document.getElementById('id_user').value,
+                user_id: $('#id_user').val(),
             }),
         })
         .then(response => {
             if (response.ok) {
-                alert_success.style.display = 'block';
+              $('#editTaskModal').modal('hide');
+              $('#alert-success').show();
+              listTasks();
             } else {
-                alert_error.style.display = 'block';
+              response.json().then(data => {
+                  console.log('Erro:', data);
+                  $('#alert-error').show();
+              }).catch(error => {
+                  console.error('Erro ao processar resposta:', error);
+                  $('#alert-error').show();
+              });
+              $('#editTaskModal').modal('hide');
             }
         })
     };
 
     function deleteTask(id) {
-        const modal = document.getElementById('deleteTaskModal');
-        const alert_success = document.getElementById('alert-success-delete');
-        const alert_error = document.getElementById('alert-error-delete');
+        $('#deleteTaskModal').modal('show');
+
         const delete_task = document.getElementById('delete-task');
 
-        modal.style.display = 'block';
-
         delete_task.addEventListener('click', () => {
-            modal.style.display = 'none';
-            fetch(`/api/tasks/${id}`, {}).then(response => {
+            $('#deleteTaskModal').modal('hide');
+            fetch(`/api/tasks/${id}`, {
+              method: 'DELETE',
+            }).then(response => {
                 if (response.ok) {
-                    alert_success.style.display = 'block';
+                    $('#alert-success-delete').show();
+                    listTasks();
                 } else {
-                    alert_error.style.display = 'block';
+                  response.json().then(data => {
+                      console.log('Erro:', data);
+                      $('#alert-error').show();
+                  }).catch(error => {
+                      console.error('Erro ao processar resposta:', error);
+                      $('#alert-error').show();
+                  });
+                  $('#alert-error-delete').show();
                 }
             });
         });
     };
 
     function closeModal(idModal) {
-        const modal = document.getElementById(idModal);
-
-        modal.style.display = 'none';
+       $('#' + idModal).modal('hide');
     };
 
     function closeAlert(idAlert) {
-        const alert = document.getElementById(idAlert);
-
-        alert.style.display = 'none';
+        $('#' + idAlert).hide()
     };
 
 </script>
