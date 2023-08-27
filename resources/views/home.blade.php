@@ -189,8 +189,6 @@
                         user_id
                     } = task;
 
-                    console.log(typeof completed)
-
                     const status = completed ? 'Completed' : 'Pending';
                     const date_completed = completed ? completed_at : '';
 
