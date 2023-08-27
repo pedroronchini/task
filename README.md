@@ -1,80 +1,71 @@
+# Task Management Web Application
 
-# Setup Docker Para Projetos Laravel
-[Assine a Academy, e Seja VIP!](https://academy.especializati.com.br)
+This repository contains a web-based task management application developed using Laravel framework and Docker for containerization.
 
-### Passo a passo
-Clone Repositório
-```sh
-git clone https://github.com/especializati/setup-docker-laravel.git my-project
-```
-```sh
-cd my-project/
-```
+## Prerequisites
 
+To run this project, make sure you have the following installed:
 
-Alterne para a branch laravel 9.x
-```sh
-git checkout laravel-9-com-php-8
-```
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Composer](https://getcomposer.org/)
 
+## Getting Started
 
-Remova o versionamento (opcional)
-```sh
-rm -rf .git/
-```
+Follow the steps below to set up and run the project locally:
 
+1. Clone the repository:
+   ```bash
+   git clone <repository_url>
+   cd <repository_directory>
+   ```
 
-Crie o Arquivo .env
-```sh
-cp .env.example .env
-```
+2. Create a `.env` file:
+   ```bash
+   cp .env.example .env
+   ```
 
+3. Update the `.env` file with your database and other configuration settings.
 
-Atualize as variáveis de ambiente do arquivo .env
-```dosini
-APP_NAME="Especializa Ti"
-APP_URL=http://localhost:8989
+4. Install project dependencies using Composer:
+   ```bash
+   composer install
+   ```
 
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=nome_que_desejar_db
-DB_USERNAME=root
-DB_PASSWORD=root
+5. Build and start the Docker containers:
+   ```bash
+   docker-compose up -d
+   ```
 
-CACHE_DRIVER=redis
-QUEUE_CONNECTION=redis
-SESSION_DRIVER=redis
+6. Generate an application key:
+   ```bash
+   docker-compose exec app php artisan key:generate
+   ```
 
-REDIS_HOST=redis
-REDIS_PASSWORD=null
-REDIS_PORT=6379
-```
+7. Run database migrations:
+   ```bash
+   docker-compose exec app php artisan migrate
+   ```
 
+8. Access the application in your browser:
+   ```
+   http://localhost:8989
+   ```
 
-Suba os containers do projeto
-```sh
-docker-compose up -d
-```
+## Usage
 
+The web application provides the following features:
 
-Acesse o container app com o bash
-```sh
-docker-compose exec app bash
-```
+- Create, edit, and delete tasks.
+- Assign tasks to users.
+- Mark tasks as completed or pending.
+- Attach files to tasks.
+- View a list of tasks.
 
+## Additional Notes
 
-Instale as dependências do projeto
-```sh
-composer install
-```
+- This project uses Docker for containerization, making it easier to set up and run the application across different environments.
+- Laravel is used as the backend framework, providing powerful tools for building web applications.
+- The application utilizes JavaScript and AJAX to provide a responsive user interface for task management.
+- Bootstrap is used for styling and UI components, resulting in a modern and user-friendly interface.
 
-
-Gere a key do projeto Laravel
-```sh
-php artisan key:generate
-```
-
-
-Acesse o projeto
-[http://localhost:8989](http://localhost:8989)
